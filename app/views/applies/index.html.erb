@@ -1,0 +1,62 @@
+<%provide(:title, "消息")%>
+<div class="container">
+	<h3>我收到的编辑申请</h3>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>申请章节</th>
+				<th>申请人</th>
+				<th>申请日期</th>
+				<th>审批状况</th>
+				<th>操作</th>
+				</tr>
+			</thead>
+		<tbody>
+			<%count=0%>
+			<%@applies.each do |f|%>
+			<tr>
+				<td><%=count += 1%></td>
+				<td><%=link_to Chapter.find(f.chapter_id).name, Chapter.find(f.chapter_id)%></td>
+				<td><%=link_to User.find(f.applicant_id).name, User.find(f.applicant_id)%></td>
+				<td><%=f.updated_at%></td>
+				<%if f.status==0 %>
+					<td>未通过</td>
+					<td><div class="btn-group">
+					<%=link_to "通过", apply_path(f), class: "btn btn-mini btn-primary"%>
+					<%=link_to "拒绝", edit_apply_path(f), class: "btn btn-mini btn-primary"%>
+					</div></td>
+				<%end%>
+				<%if f.status==1 %><td>已通过</td><td>无</td><%end%>
+				<%if f.status==-1%><td>已拒绝</td><td>无</td><%end%>
+			</tr>
+			<%end%>
+		</tbody>
+	</table>
+	<h3>我发出的编辑申请</h3>
+		<table class="table">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>章节</th>
+				<th>章节负责人</th>
+				<th>申请日期</th>
+				<th>审批状况</th>
+				</tr>
+			</thead>
+		<tbody>
+			<%coun=0%>
+			<%@applies_too.each do |a|%>
+			<tr>
+				<td><%=coun += 1%></td>
+				<td><%=link_to Chapter.find(a.chapter_id).name, Chapter.find(a.chapter_id)%></td>
+				<td><%=link_to User.find(a.owner_id).name, User.find(a.owner_id)%></td>
+				<td><%=a.updated_at%></td>
+				<%if a.status==0 %><td>未通过</td><%end%>
+				<%if a.status==1 %><td>已通过</td><%end%>
+				<%if a.status==-1%><td>已拒绝</td><%end%>
+			</tr>
+			<%end%>
+		</tbody>
+	</table>
+</div>

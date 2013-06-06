@@ -1,0 +1,30 @@
+<%provide(:title, "小编")%>
+<div class="container">
+	<table class="table table-bordered">
+		<%if @chapters!=nil%>
+		<thead>
+		<tr>
+			<th>序号</th>
+			<th>章节名</th>
+			<th>进度</th>
+		</tr>
+		</thead>
+		<tbody>
+			<%count=0%>	
+			<%@chapters.each do |f|%>
+			<tr>
+				<td><%=count+=1%></td>
+				<td><%=link_to f.name, f%></td>
+				<td>
+					<div class="progress progress-striped active">
+						<div class="bar" style="width: <%=f.processing%>%;"></div>
+					</div>
+				</td>
+			</tr>
+			<%end%>
+		</tbody>
+		<%else%>
+			<h2>这。。。你没有担任任何编辑工作。。。</h2>
+		<%end%>
+	</table>
+</div>

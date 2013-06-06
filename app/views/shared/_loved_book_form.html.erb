@@ -1,0 +1,10 @@
+<%= form_for(@loved_book) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div class="field">
+    <%= f.text_field :book_name, placeholder: "编辑新书名" %>
+	</div>
+	<div class="field">
+		<%= f.text_field :book_description, placeholder: "编写简介"%>
+	</div>
+  <%= f.submit "创建书籍", class: "btn btn-primary" %>
+<% end %>

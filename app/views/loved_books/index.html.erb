@@ -1,0 +1,27 @@
+<% provide(:title, '所有书籍') %>
+<div class="container">
+<h1> 所有书籍</h1>
+			<%= will_paginate %>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>书名</th>
+						<th>简介</th>
+						<th>主编</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%count=0%>
+					<%@loved_books.each do |f|%>
+					<tr>
+						<td><%=count += 1%></td>
+						<td><%=link_to f.book_name, f%></td>
+						<td><%=f.book_description%></td>
+						<td><%=User.find(f.user_id).name%></td>
+					</tr>
+					<%end%>
+				</tbody>
+			</table>	
+			<%= will_paginate %>
+			</div>

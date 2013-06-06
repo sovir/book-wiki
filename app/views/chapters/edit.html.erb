@@ -1,0 +1,15 @@
+<div class="container">
+<h1>编辑中</h1>
+<div class="row">
+	<div class="span10 offset1">
+		<%= form_for(@chapter) do |f| %>
+			<%= render 'shared/error_messages', object: f.object %>
+			<%= f.label :name, "章节内容" %>
+			<%= f.text_area :content, placeholder: "章节内容" %>
+			<%= f.label	:processing, "进度"%>
+			<%= f.text_field :processing, placeholder:	"0-100"%>
+			<%= f.submit "更新", class: "btn btn-large btn-primary" %>
+		<% end %>
+	</div>
+</div>
+</div>

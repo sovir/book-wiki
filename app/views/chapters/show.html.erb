@@ -1,0 +1,86 @@
+<%provide(:title, "章节")%>
+<div class="container">
+	<div class="row tabbable tabs-left">
+			<ul class="span2 nav nav-tabs">
+				<li class="active"><a herf="#">以下为本章节的历史版本</a></li>
+				<% if @editions.any? %>
+					<%@editions.each do |a|%>
+						<li><%=link_to a.updated_at, a%></li>
+					<%end%>
+				<%end%>
+				<li class="active"><a herf="#">以下为本章节的子章节</a></li>
+				<% if @chapters.any? %>
+					<%@chapters.each do |f|%>
+						<%if f.id==@chapter.id%>
+							<li class="active"><%=link_to f.name, f%></li>
+						<%else%>
+							<li><%=link_to f.name, f%></li>
+						<%end%>
+					<%end%>
+				<% end %>
+        	</ul>
+			<div class="span10 tab-content">
+					<div class="row-fluid">
+						<div class="span9">
+							<span class="label label-info">章节名称：<%=@chapter.name%></span></br>
+							<span class="label label-info">章节描述：<%=@chapter.description%></span></br>
+							<%if @chapter.loved_book_id==nil%>
+								<span class="label label-warning">父章节：<%=link_to Chapter.find(@chapter.chapter_id).name, Chapter.find(@chapter.chapter_id)%></span></br>
+							<%else%>
+								<span class="label label-warning">所属书籍：<%=link_to LovedBook.find(@chapter.loved_book_id).book_name, LovedBook.find(@chapter.loved_book_id)%></span></br>
+							<%end%>
+							<span class="label label-info">一大波小编来袭：</span>
+							<%@editors.each do |f|%>
+								<span class="label label-warning"><%=link_to f.name, f%></span>
+							<%end%>		
+					<% if @chapter.users.exists?(current_user) %>
+							<%=markdown(File.read(Rails.root.join('chapter')+"#{@chapter.id}.md")) %>	
+						</div>
+
+						<div class="span3">
+							<div class="btn-group">
+								<%= link_to "编辑", edit_chapter_path(@chapter), class: "btn btn-mini btn-primary" %>
+									<%= link_to "删除此章？", @chapter, method: :delete,
+            	        		                 data: { confirm: "You sure?" },
+												 title: @chapter.name, class: "btn btn-mini btn-primary" %>
+							</div>
+		   					<div class="btn-group">
+								<%= link_to "新建子章节",	new_chapter_path, class: "btn btn-mini btn-primary" %>
+								<%if @chapter.loved_book_id==nil%>
+								<%= link_to "返回",	Chapter.find(@chapter.chapter_id), class: "btn btn-mini btn-primary" %>
+								<%else%>
+								<%= link_to "返回",	LovedBook.find(@chapter.loved_book_id), class: "btn btn-mini btn-primary"%>
+								<%end%>
+							</div>
+								<div></br></div>
+								<%=form_for @editor, :url=>{:action => :addeditor} do |f|%>
+									<span class="label label-primary"><%=f.label	:name, "为本章节添加小编："%></span>
+									<%=f.select(:id, User.find(:all, :order=>'name').collect{|type|[type.name, type.id]})%>
+									<%=f.submit '添加', class: "btn btn-primary"%>
+								<%end%>
+						</div>
+					</div>
+				<%else%></br>
+					<span class="label label-info">Sorry,你没有权限查看内容</span>
+					<% @applies = Apply.where({ :chapter_id => @chapter.id }).all%>
+					<% @applies.each do |f|%>
+						<% if f.applicant_id == current_user.id%>
+						<% @has = true%>
+						<% @status = f.status%>
+						<%end%>
+					<%end%>
+					<%if @has%>
+						<%if @status==-1%>
+							<span class="label label-info">悲剧，你的申请被主编拒绝了。</span>
+							<span class="label label-warning"><%=link_to "再次虔诚地申请成为该章节的编辑", applies_path(@chapter), :method => :post, class: "btn btn-mini btn-primary"%></span>
+						<%end%>
+						<%if @status==0%>
+							<span class="label label-info">你的申请已提交，等待主编定夺。</span>
+						<%end%>
+					<%else%>
+						<span class="label label-warning"><%=link_to "申请成为该章节的编辑", applies_path(@chapter), :method => :post, class: "btn btn-mini btn-primary"%></span>
+					<%end%>
+				<%end%>
+			</div>
+		</div>
+</div>

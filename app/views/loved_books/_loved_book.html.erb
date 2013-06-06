@@ -1,0 +1,11 @@
+<li>
+<span class="content"><h3>书名：<%= link_to loved_book.book_name, loved_book %></h3></span>
+  <span class="timestamp">
+    简介：<%= loved_book.book_description %>。
+	</span>
+	<% if current_user?(loved_book.user) %>
+    <%= link_to "删除此书？", loved_book, method: :delete,
+                                     data: { confirm: "You sure?" },
+                                     title: loved_book.book_name %>
+  <% end %>
+  </li>

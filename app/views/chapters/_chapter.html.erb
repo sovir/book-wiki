@@ -1,0 +1,10 @@
+<li>
+<span class="content"><h3>章节：<%= chapter.name%></h3></span>
+	<% if current_user?(User.find(LovedBook.find(chapter.loved_book_id).user_id)) %>
+		<%= link_to "查看章节", chapter, class: "btn btn-large btn-primary" %>
+		<%= link_to "编辑章节", edit_chapter_path(chapter), class: "btn btn-large btn-primary" %>
+		<%= link_to "删除此章节？", chapter, method: :delete,
+																			data: {confirm: "You sure?"},
+																			title: chapter.name , class: "btn btn-large btn-primary"%>
+	<% end %>
+</li>

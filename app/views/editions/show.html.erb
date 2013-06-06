@@ -1,0 +1,53 @@
+<%provide(:title, "章节")%>
+<div class="container">
+	<div class="row tabbable tabs-left">
+			<ul class="span2 nav nav-tabs">
+				<li class="active"><a herf="#">以下为本章节的历史版本</a></li>
+				<% if @editions.any? %>
+					<%@editions.each do |a|%>
+						<li><%=link_to a.updated_at, a%></li>
+					<%end%>
+				<%end%>
+				<li class="active"><a herf="#">以下为本章节的子章节</a></li>
+				<% if @chapters.any? %>
+					<%@chapters.each do |f|%>
+						<%if f.id==@chapter.id%>
+							<li class="active"><%=link_to f.name, f%></li>
+						<%else%>
+							<li><%=link_to f.name, f%></li>
+						<%end%>
+					<%end%>
+				<% end %>
+        	</ul>
+			<div class="span10 tab-content">
+					<div class="row-fluid">
+						<div class="span9">
+							<span class="label label-info">章节名称：<%=@chapter.name%></span></br>
+							<span class="label label-info">章节描述：<%=@chapter.description%></span></br>
+							<span class="label label-info">本版最后修改者：</span>
+							<span class="label label-warning"><%=link_to @lasteditor.name%></span>	
+					<% if @chapter.users.exists?(current_user) %>
+							<%=markdown(File.read(Rails.root.join('edition')+"#{@edition.id}.md")) %>	
+						</div>
+
+						<div class="span3">
+							<div class="btn-group">
+								<%= form_for(@edition) do |f| %>
+									<%= render 'shared/error_messages', object: f.object %>
+									<%= f.submit "将章节回退至本版本", class: "btn btn-primary" %>
+								<% end %>
+							</div>
+		   					<div class="btn-group">
+								<%= link_to "删除此版本？", @edition, method: :delete,
+            	        			data: { confirm: "确定?" },
+									title: @edition.id, class: "btn btn-mini btn-primary" %>
+								<%= link_to "章节现版本",	Chapter.find(@edition.chapter_id), class: "btn btn-mini btn-primary" %>
+							</div>
+						</div>
+					</div>
+				<%else%>
+					<span class="label label-info">Sorry,你没有权限查看内容</span>
+				<%end%>
+			</div>
+		</div>
+</div>

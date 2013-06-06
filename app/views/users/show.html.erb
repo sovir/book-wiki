@@ -1,0 +1,43 @@
+<% provide(:title, '用户资料') %>
+<div class="container">
+<div class="row">
+  <aside>
+    <section class="span9">
+      <h1>
+        <%= gravatar_for @user %>
+		昵称：<%= @user.name %></br>
+		邮箱：<%= @user.email %>
+      </h1>
+	</section>
+	<section class="span3">
+				<%= render 'shared/loved_book_form' %>
+	</section>
+
+	<div class="span12">
+    	<% if @user.loved_books.any? %>
+			<h3><%= @user.name + '    '%>主编的书： (共有<%= @user.loved_books.count %>个作品)</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>书名</th>
+						<th>简介</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%count=0%>
+					<%@loved_books.each do |f|%>
+					<tr>
+						<td><%=count += 1%></td>
+						<td><%=link_to f.book_name, f%></td>
+						<td><%=f.book_description%></td>
+					</tr>
+					<%end%>
+				</tbody>
+			</table>	
+      		<% will_paginate @loved_books%>
+    	<% end %>
+	</div>
+	</aside>
+</div>
+</div>

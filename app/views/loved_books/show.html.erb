@@ -1,0 +1,41 @@
+<%provide(:title, "书籍信息")%>
+<div class="container">
+	<div class="tabbable tabs-left">
+		<ul class="nav nav-tabs">
+			<li class="active"><%=link_to '书籍信息', @loved_book%>
+			<% if @chapters.any? %>
+				<%@chapters.each do |f|%>
+					<li><%=link_to f.name, f%></li>
+				<%end%>
+			<% end %>
+        </ul>
+		<div class="tab-content">
+			<div class="row-fluid">
+				<div class="span8">
+					<span class="label label-info">书名：<%=@loved_book.book_name%></span></br>
+					<span class="label label-success">简介：<%=@loved_book.book_description%></span></br>
+					<span class="label label-success">主编：<%=@loved_book.user.name%></span>
+				
+					
+
+				</div>
+
+				<div class="span4">
+					<% if current_user?(@loved_book.user)%>
+						<div class="btn-group">
+						<%= link_to "新建章节", new_chapter_path, class: "btn btn-primary" %>
+						<%= link_to "删除此书？", @loved_book, method: :delete,
+            	                         data: { confirm: "You sure?" },
+                	                     title: @loved_book.book_name, class: "btn btn-primary" %>
+						<%= link_to "返回", @loved_book.user, class: "btn btn-primary" %>
+						</div>
+					<%else%>
+						<div class="btn-group">
+							<%= link_to "返回书籍列表", loved_books_path, class: "btn btn-primary" %>
+						</div>				 
+					<%end%>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
